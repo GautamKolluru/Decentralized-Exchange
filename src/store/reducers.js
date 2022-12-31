@@ -67,6 +67,9 @@ export const exchange = (
     balances: [],
     trasnsaction: {},
     events: [],
+    allOrders: {
+      data: [],
+    },
   },
   action
 ) => {
@@ -117,11 +120,47 @@ export const exchange = (
         trasnsaction: {
           trasnsactionType: "Transfer",
           isPending: false,
-          isSuccessful: true,
+          isSuccessful: false,
           isError: true,
         },
         transferInprogress: false,
       }
+
+    //Order request
+    case "NEW_ORDER_REQUEST":
+      return {
+        ...state,
+        trasnsaction: {
+          trasnsactionType: "New Order",
+          isPending: true,
+          isSuccessful: false,
+        },
+      }
+    case "NEW_ORDER_FAIL":
+      return {
+        ...state,
+        trasnsaction: {
+          trasnsactionType: "New Order",
+          isPending: false,
+          isSuccessful: false,
+          isError: true,
+        },
+      }
+    case "NEW_ORDER_SUCCESS":
+      return {
+        ...state,
+        trasnsaction: {
+          trasnsactionType: "New Order",
+          isPending: false,
+          isSuccessful: true,
+        },
+        events: [action.event, ...state.events],
+        allOrders: {
+          ...state.allOrders,
+          data: [...state.allOrders.data, action.order],
+        },
+      }
+
     default:
       return state
   }

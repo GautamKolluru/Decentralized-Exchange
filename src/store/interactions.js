@@ -51,6 +51,22 @@ export const subscribeToEvent = (exchange, dispatch) => {
   exchange.on("Withdraw", (token, user, amount, balance, event) => {
     dispatch({ type: "TRANSFER_SUCCESS", event })
   })
+  exchange.on(
+    "Order",
+    (
+      id,
+      user,
+      tokenGet,
+      amountGet,
+      tokenGive,
+      amountGive,
+      timeStamp,
+      event
+    ) => {
+      const order = event.args
+      dispatch({ type: "NEW_ORDER_SUCCESS", event, order })
+    }
+  )
 }
 //Load User Balance (Wallet and exchange)
 
@@ -109,5 +125,64 @@ export const transferTokens = async (
   } catch (error) {
     console.log(error)
     dispatch({ type: "TRANSFER_FAIL" })
+  }
+}
+
+//Orders Buy and Sell
+export const makeBuyOrder = async (
+  provider,
+  exchange,
+  tokens,
+  order,
+  dispatch
+) => {
+  let transcation, receipt
+  try {
+    const signer = await provider.getSigner()
+    const tokenGet = tokens[0].address
+    const amountGet = ethers.utils.parseUnits(order.amount, 18)
+    const tokenGive = tokens[1].address
+    const amountGive = ethers.utils.parseUnits(
+      (order.amount * order.price).toString(),
+      18
+    )
+    dispatch({ type: "NEW_ORDER_REQUEST" })
+
+    transcation = await exchange
+      .connect(signer)
+      .makeOrder(tokenGet, amountGet, tokenGive, amountGive)
+    receipt = await transcation.wait()
+  } catch (error) {
+    dispatch({ type: "NEW_ORDER_FAIL" })
+  }
+}
+
+export const makeSellOrder = async (
+  provider,
+  exchange,
+  tokens,
+  order,
+  dispatch
+) => {
+  let transcation, receipt
+  try {
+    const signer = await provider.getSigner()
+    const tokenGet = tokens[1].address
+    const amountGet = ethers.utils.parseUnits(
+      (order.amount * order.price).toString(),
+      18
+    )
+    const tokenGive = tokens[0].address
+    const amountGive = ethers.utils.parseUnits(order.amount, 18)
+    dispatch({ type: "NEW_ORDER_REQUEST" })
+
+    transcation = await exchange
+      .connect(signer)
+      .makeOrder(tokenGet, amountGet, tokenGive, amountGive)
+    receipt = await transcation.wait()
+
+    console.log("ordr count" + (await exchange.connect(signer).orderCount()))
+  } catch (error) {
+    dispatch({ type: "NEW_ORDER_FAIL" })
   }
 }
