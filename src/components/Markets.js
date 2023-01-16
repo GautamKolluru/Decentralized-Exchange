@@ -9,7 +9,6 @@ const Markets = () => {
   let provider = useSelector((state) => state.provider.connection)
 
   const marketHandler = async (e) => {
-    console.log("market")
     await loadTokens(provider, e.target.value.split(","), dispatch)
   }
 

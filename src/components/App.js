@@ -5,6 +5,11 @@ import Navbar from "./Navbar"
 import Markets from "./Markets"
 import Balance from "./Balance"
 import Order from "./Order"
+import OrderBook from "./OrderBook"
+import PriceChart from "./PriceChart"
+import Trades from "./Trade"
+import Transactions from "./Transcations"
+
 import {
   loadProvider,
   loadNetwork,
@@ -12,6 +17,7 @@ import {
   loadTokens,
   loadExchange,
   subscribeToEvent,
+  loadAllOrders,
 } from "../store/interactions"
 
 function App() {
@@ -48,6 +54,7 @@ function App() {
 
     //Listen to events
     subscribeToEvent(exchange, dispatch)
+    loadAllOrders(provider, exchange, dispatch)
   }
 
   useEffect(() => {
@@ -65,13 +72,13 @@ function App() {
           <Order />
         </section>
         <section className="exchange__section--right grid">
-          {/* PriceChart */}
+          <PriceChart />
 
-          {/* Transactions */}
+          <Transactions />
 
-          {/* Trades */}
+          <Trades />
 
-          {/* OrderBook */}
+          <OrderBook />
         </section>
       </main>
 

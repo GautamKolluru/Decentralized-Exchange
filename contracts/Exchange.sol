@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
-import "hardhat/console.sol";
 import "./Token.sol";
 
 contract Exchange {
@@ -104,7 +103,10 @@ contract Exchange {
         address _tokenGive,
         uint256 _amountGive
     ) public {
-        require(balanceof(_tokenGive, msg.sender) >= _amountGive);
+        require(
+            balanceof(_tokenGive, msg.sender) >= _amountGive,
+            "Insufficient balance"
+        );
         orderCount = orderCount + 1;
         orders[orderCount] = _Order(
             orderCount,

@@ -37,16 +37,16 @@ const Order = () => {
 
   const buyHandler = (e) => {
     e.preventDefault()
-
+    console.log("buy order")
     makeBuyOrder(provider, exchange, tokens, { amount, price }, dispatch)
     setAmount(0)
     setPrice(0)
   }
   const sellHandler = (e) => {
     e.preventDefault()
+    makeSellOrder(provider, exchange, tokens, { amount, price }, dispatch)
     setAmount(0)
     setPrice(0)
-    makeSellOrder(provider, exchange, tokens, { amount, price }, dispatch)
   }
   return (
     <div className="component exchange__orders">

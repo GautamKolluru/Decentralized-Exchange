@@ -22,6 +22,7 @@ const Balance = () => {
 
   let tokenBalance = useSelector((state) => state.tokens.balances)
   let exchangeBalance = useSelector((state) => state.exchange.balances)
+  let exchangeFilledOrders = useSelector((state) => state.exchange.filledOrders)
 
   let provider = useSelector((state) => state.provider.connection)
   let transferInprogress = useSelector(
